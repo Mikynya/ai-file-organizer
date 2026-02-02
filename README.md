@@ -457,10 +457,6 @@ ruff check src/
 black src/
 ```
 
-## License
-
-[[LICENSE]]
-
 ## Acknowledgments
 
 - [CLIP](https://github.com/openai/CLIP) by OpenAI
