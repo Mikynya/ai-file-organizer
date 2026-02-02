@@ -1,0 +1,85 @@
+services:
+  organizer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: file-organizer:latest
+    container_name: file-organizer
+    volumes:
+      # Mount input directory (read-only for safety)
+      - ./input:/data/input:ro
+      # Mount output directory
+      - ./output:/data/output
+      # Mount logs directory
+      - ./logs:/data/logs
+      # Mount model cache (persists across runs)
+      - models_cache:/models
+    environment:
+      - HF_HOME=/models
+      - TRANSFORMERS_CACHE=/models
+      - LOG_LEVEL=INFO
+    # Example command (override as needed)
+    # By default, files are copied (use --move to move instead)
+    command:
+      - organize
+      - --input
+      - /data/input
+      - --output
+      - /data/output
+      - --mode
+      - cluster
+      - --workers
+      - "4"
+      - --models-cache
+      - /models
+      - --log-file
+      - /data/logs/organize.jsonl
+
+  # GPU-accelerated service (requires NVIDIA GPU + Docker GPU support)
+  organizer-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    image: file-organizer:gpu
+    container_name: file-organizer-gpu
+    volumes:
+      # Mount input directory (read-only for safety)
+      - ./input:/data/input:ro
+      # Mount output directory
+      - ./output:/data/output
+      # Mount logs directory
+      - ./logs:/data/logs
+      # Mount model cache (persists across runs)
+      - models_cache:/models
+    environment:
+      - HF_HOME=/models
+      - TRANSFORMERS_CACHE=/models
+      - LOG_LEVEL=INFO
+      - CUDA_VISIBLE_DEVICES=0
+    # GPU deployment configuration
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # Example command
+    command:
+      - organize
+      - --input
+      - /data/input
+      - --output
+      - /data/output
+      - --mode
+      - cluster
+      - --workers
+      - "4"
+      - --models-cache
+      - /models
+      - --log-file
+      - /data/logs/organize.jsonl
+
+volumes:
+  models_cache:
+    driver: local

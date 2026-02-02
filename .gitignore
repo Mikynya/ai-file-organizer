@@ -1,0 +1,52 @@
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+input/
+output/
+logs/
+models_cache/
+*.jsonl
+*.db
+tutorials/
+QUICKSTART.md
+HDBSCAN_GUIDE.md
+IMPROVEMENTS.md
+
+
+# Environment
+.env
+.env.local
